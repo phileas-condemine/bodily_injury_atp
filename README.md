@@ -70,9 +70,8 @@ When checking data quality, we also made sure there are no other files than .xml
 <li> digits tokens should be parsed and formatted whether they are dates/times, money amounts, hours/durations, kilometers/distances, frequency. This can be induced by the context (surrounding words) and is not trivial to handle.
 <li> another important feature is the court that handled the case. According to the schema this should be inside JURIDICTION and FORM_DEC_ATT tags. it should be easy to parse.
 <li> find out which party won the CASS_text_extraction
-<li> extract decisions looking more specifically at the end of the documents and checking the sentences that start with "comdamne", or "admet". Decisions are usually introduced by a
-"br - p PAR CES MOTIFS -/p <br>
--p LA COUR -/p"
+<li> extract decisions looking more specifically at the end of the documents and checking the sentences that start with "condamne", "admet", "deboute", "dit", "infirme". Decisions are usually introduced by a
+"PAR CES MOTIFS LA COUR". it can be found in 28360 cases out of 63340 for CAPP.
 
 </ul>
 
@@ -86,7 +85,7 @@ When checking data quality, we also made sure there are no other files than .xml
 </ol>
 
 ## frequent words / stop keywords
-If the case refers to a person (personne physique) rather than a company or another moral entity, then it is anonymized and the person will be refered as "x...". After I remove punctuation and less than 4 letters tokens, this "x..." disappeared. 
+If the case refers to a person (personne physique) rather than a company or another moral entity, then it is anonymized and the person will be refered as "x...". After I remove punctuation and less than 4 letters tokens, this "x..." disappeared.
 <ul>
 <li>         dans 61957
 <li>        appel 61947
@@ -164,4 +163,20 @@ If the case refers to a person (personne physique) rather than a company or anot
 <li> breaking (cassation) instance released
 <li> breaking (cassation) instance unreleased (inedit)
 <li> admin instance (JADE)
+</ul>
+
+## features extraction
+The XML schema offers easy extraction of many features. Unfortunately in many cases the data is not filled correctly and almost everything ends up in the content/body of the document. Only the date of the current trial and the court name for the second trial are always defined.
+Out of 63340 cases,
+<ul>
+<li> 37685 don't have the output decision filled,
+<li> 45872 don't have the first trial court name filled (sometimes there wasn't any previous trial)
+<li> 45987 don't have the first trial date filled
+<li> 37685 don't have the type of decision/nature of decision filled
+</ul>
+
+# references
+<ul>
+<li>for Grep, here is a very cool <a href="http://www.endmemo.com/program/R/grep.php">cheatsheet</a>
+<li>
 </ul>

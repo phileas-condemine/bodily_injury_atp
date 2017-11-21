@@ -14,21 +14,26 @@ prepare_doc <- function(doc_name){
 }
 one_doc <- prepare_doc(doc_name1)
 
+# careful with the path, need to check if the root bodily-injury-ATP or smthg else
 time_to_read_CAPP <- system.time(CAPP_docs <- pbapply::pbsapply(CAPP_names,prepare_doc))
 print(time_to_read_CAPP)
-save(list=c("CAPP_docs","time_to_read_CAPP"),file="bodily_injury/data/CAPP_1ST_2ND_INSTANCES/CAPP_text_extraction.RData")
+save(list=c("CAPP_docs","time_to_read_CAPP"),file="data/CAPP_1ST_2ND_INSTANCES/CAPP_text_extraction.RData")
 
+CASS_names <- gsub(pattern = "/home/rstudio/bodily_injury/data",replacement = "data",x = CASS_names)
+time_to_read_CASS <- system.time(CASS_docs <- pbapply::pbsapply(CASS_names,prepare_doc))
+print(time_to_read_CASS)
+save(list=c("CASS_docs","time_to_read_CASS"),file="data/CASSATION_BREAKING/RELEASED/CASS_text_extraction.RData")
 
-words_of_interest <- c("corporel", "prejudice", "atp", "assistance", "tierce personne","assurance","axa", "tierce","soin","infirmier")
-for (nm in words_of_interest){
-  docs_with_word <- grep(pattern = nm,x = CAPP_docs)
-  len <- length(docs_with_word)
-  if (len>0){
-    print(sprintf("there are %s docs with the word %s, here is a sample of docs to check %s",len,toupper(nm),paste(head(docs_with_word,5),collapse = " ")))
-  }
-}
+INCA_names <- gsub(pattern = "/home/rstudio/bodily_injury/data",replacement = "data",x = INCA_names)
+time_to_read_INCA <- system.time(INCA_docs <- pbapply::pbsapply(INCA_names,prepare_doc))
+print(time_to_read_INCA)
+save(list=c("INCA_docs","time_to_read_INCA"),file="data/CASSATION_BREAKING/RELEASED/INCA_text_extraction.RData")
+
+JADE_names <- gsub(pattern = "/home/rstudio/bodily_injury/data",replacement = "data",x = JADE_names)
+time_to_read_JADE <- system.time(JADE_docs <- pbapply::pbsapply(JADE_names,prepare_doc))
+print(time_to_read_JADE)
+save(list=c("JADE_docs","time_to_read_JADE"),file="data/JADE_ADMIN_COURT/JADE_text_extraction.RData")
+
 
 # Next steps : 
-# convert tolower and remove accents to ease search
 # check the consistency of the schema to parse the data and extract the main content <CONTENU>
-# check the docs with the words : corporel, préjudice, atp, assistance, personne, tierce

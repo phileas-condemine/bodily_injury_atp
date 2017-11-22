@@ -72,7 +72,7 @@ When checking data quality, we also made sure there are no other files than .xml
 <li> find out which party won the CASS_text_extraction
 <li> extract decisions looking more specifically at the end of the documents and checking the sentences that start with "condamne", "admet", "deboute", "dit", "infirme". Decisions are usually introduced by a
 "PAR CES MOTIFS LA COUR". it can be found in 28360 cases out of 63340 for CAPP.
-
+<li> Another pattern to identify is the list of the amounts like in this <a href="https://www.legifrance.gouv.fr/affichJuriJudi.do?oldAction=rechExpJuriJudi&idTexte=JURITEXT000034286659&fastReqId=2093206124&fastPos=20"> doc </a> or this <a href="https://www.legifrance.gouv.fr/affichJuriJudi.do?oldAction=rechExpJuriJudi&idTexte=JURITEXT000031849603&fastReqId=1691567375&fastPos=53"> doc </a>
 </ul>
 
 ## scripts order
@@ -163,6 +163,56 @@ If the case refers to a person (personne physique) rather than a company or anot
 <li> breaking (cassation) instance released
 <li> breaking (cassation) instance unreleased (inedit)
 <li> admin instance (JADE)
+<ul>
+<li> "there are 6884 docs with the word CORPOREL, here is a sample of docs to check 28 107 162 261 343"
+<li> "there are 731 docs with the word DOMMAGE CORPOREL, here is a sample of docs to check 1279 6991 7837 13141 20018"
+<li> "there are 64624 docs with the word PREJUDICE, here is a sample of docs to check 2 13 19 27 38"
+<li> "there are 4553 docs with the word TIERCE, here is a sample of docs to check 59 214 301 412 468"
+<li> "there are 2389 docs with the word TIERCE PERSONNE, here is a sample of docs to check 301 580 631 632 643"
+<li> "there are 10868 docs with the word ASSISTANCE, here is a sample of docs to check 8 19 24 28 42"
+<li> "there are 32 docs with the word ASSISTANCE TIERCE PERSONNE, here is a sample of docs to check 184600 186046 194229 195424 220325"
+<li> "there are 56874 docs with the word DOMICILE, here is a sample of docs to check 32 41 42 43 44"
+<li> "there are 116362 docs with the word SOIN, here is a sample of docs to check 3 6 13 17 19"
+<li> "there are 2701 docs with the word INFIRMIER, here is a sample of docs to check 54 871 999 1492 2325"
+<li> "there are 16002 docs with the word QUALIFIE, here is a sample of docs to check 9 16 59 158 191"
+<li> "there are 9765 docs with the word INVALIDITE, here is a sample of docs to check 19 74 93 327 345"
+<li> "there are 3 docs with the word INVALIDITE PHYSIQUE, here is a sample of docs to check 23575 112503 149134"
+<li> "there are 7681 docs with the word INCAPACITE, here is a sample of docs to check 93 108 164 380 433"
+<li> "there are 141 docs with the word INCAPACITE PHYSIQUE, here is a sample of docs to check 10702 10787 16343 16345 32709"
+<li> "there are 1694 docs with the word FRAIS MEDICAUX, here is a sample of docs to check 733 1368 1850 2411 2668"
+<li> "there are 3094 docs with the word SEQUELLES, here is a sample of docs to check 433 696 792 1000 1211"
+<li> "there are 1 docs with the word ARRET TRAVAIL, here is a sample of docs to check 305510"
+<li> "there are 1 docs with the word RECOURS INDEMNITE, here is a sample of docs to check 360035"
+<li> "there are 113598 docs with the word LITIGE, here is a sample of docs to check 2 6 9 10 14"
+<li> "there are 24100 docs with the word GRAVITE, here is a sample of docs to check 17 43 44 48 55"
+<li> "there are 854 docs with the word PRETIUM DOLORIS, here is a sample of docs to check 313 643 1368 2952 3536"
+<li> "there are 2820 docs with the word PREJUDICE ESTHETIQUE, here is a sample of docs to check 643 682 733 935 1194"
+<li> "there are 3543 docs with the word MUTUELLE, here is a sample of docs to check 54 162 314 326 684"
+<li> "there are 23582 docs with the word ASSURANCE, here is a sample of docs to check 74 93 102 154 162"
+<li> "there are 211 docs with the word ALLIANZ, here is a sample of docs to check 8499 10527 12263 13130 17986"
+<li> "there are 18862 docs with the word GENERALI, here is a sample of docs to check 6 19 43 44 50"
+<li> "there are 103 docs with the word ZURICH, here is a sample of docs to check 1696 2599 5131 5611 6572"
+<li> "there are 60 docs with the word MATMUT, here is a sample of docs to check 162 15283 18395 28427 28460"
+<li> "there are 45 docs with the word PACIFICA, here is a sample of docs to check 13322 15410 19358 41722 56583"
+<li> "there are 1094 docs with the word CREDIT AGRICOLE, here is a sample of docs to check 74 2837 2862 4565 4820"
+<li> "there are 15903 docs with the word AXA, here is a sample of docs to check 9 10 20 26 31"
+<li> "there are 86972 docs with the word GAN, here is a sample of docs to check 3 5 9 13 19"
+<li> "there are 68 docs with the word GMF, here is a sample of docs to check 5920 7329 7939 8951 14478"
+<li> "there are 323 docs with the word MAIF, here is a sample of docs to check 1563 1606 1695 5351 11703"
+<li> "there are 183 docs with the word MACIF, here is a sample of docs to check 326 4918 5095 8636 10783"
+<li> "there are 114 docs with the word MAAF, here is a sample of docs to check 887 1566 2337 8262 9776"
+<li> "there are 283 docs with the word GROUPAMA, here is a sample of docs to check 1032 3692 7380 10146 10170"
+<li> "there are 328 docs with the word MUTUELLE GENERALE, here is a sample of docs to check 1192 1790 3968 4828 5816"
+<li> "there are 45 docs with the word COVEA, here is a sample of docs to check 204415 224182 231675 236098 239937"
+<li> "there are 101 docs with the word AVIVA, here is a sample of docs to check 9541 14824 37651 38893 41110"
+<li> "there are 4 docs with the word EUROFIL, here is a sample of docs to check 54734 54735 252584 255346"
+<li> "there are 159 docs with the word BANQUE POSTALE, here is a sample of docs to check 178233 200434 203450 206272 214507"
+<li> "there are 13066 docs with the word OLIVIER, here is a sample of docs to check 96 503 677 761 1221"
+<li> "there are 2 docs with the word ALLSECUR, here is a sample of docs to check 12660 394724"
+<li> "there are 16 docs with the word APRIL, here is a sample of docs to check 9572 46066 53718 188532 189816"
+<li> "there are 7 docs with the word PAR CES MOTIFS LA COUR, here is a sample of docs to check 152299 252293 301645 340371 343284"
+
+</ul>
 </ul>
 
 ## features extraction

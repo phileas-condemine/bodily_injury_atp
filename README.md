@@ -48,6 +48,15 @@ Then I tried to create an Azure Container Service but I needed a <a href="https:
 Then I tried Data Science Virtual Machine on Linux. Unfortunately it also goes with X2GO. Good knews is many things are already installed including R/RStudio. But R is not up to date...<br>
 Here you can find more information on how to connect using <a href="http://timmyreilly.azurewebsites.net/generating-an-ssh-key-and-using-in-on-azure/">SSH key pair</a> <br>
 There might also be issues with the .ssh folder rights, <a href="https://unix.stackexchange.com/questions/36540/why-am-i-still-getting-a-password-prompt-with-ssh-with-public-key-authentication">here is a fix</a> <br>
+More specifically :
+<ul>
+<li> connect to the VM side with the password and type
+<ul>
+<li> sudo chmod 700 ~/.ssh
+<li> sudo chmod go-w ~
+</ul>
+<li> log in using the private key, not the .pub !!!
+</ul>
 
 
 # data size

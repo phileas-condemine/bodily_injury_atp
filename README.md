@@ -37,9 +37,18 @@ If the breaking court breaks the second degree instance decision, then the judge
 # Work environment :
 To make sure anyone can reproduce this work, I used a docker container based on <b>rocker/rstudio</b> image.<br>
 One can reproduce it following the step in the readme of <a href="https://github.com/phileas-condemine/text-mining"> this repo.</a> <br>
-For basic read/write operations, using docker containers can be much slower than running the operations locally.<br>
+For basic read/write operations, using docker containers running locally can be much slower than running the operations locally.<br>
 For example it's x4 slower (CAPP 5 mins vs 20 mins, JADE 25 mins vs 2 hours) for xml_check_quality.R >> prepare_doc().<br>
-Thus most data prep operations were run locally.
+Thus most data prep operations were run locally.<br>
+Given the amount of data, the RAM gets saturated very fast then even the swaps gets to fill the harddrive. Therefore I tried to use cloud virtual machines.<br>
+I have an Azure professional account so I'd rather use Azure even though there are less tutorial and forums that for AWS and GoogleCloud.<br>
+First I tried basic ubuntu VM. By default, they can only be accessed through X2GO. It is very slow.<br>
+Then I tried to create an Azure Container Service but I needed a <a href="https://docs.microsoft.com/fr-fr/azure/container-service/kubernetes/container-service-kubernetes-service-principal
+">subscriptionID</a> to which I don't have access as I am a simple user of the company license.<br>
+Then I tried Data Science Virtual Machine on Linux. Unfortunately it also goes with X2GO. Good knews is many things are already installed including R/RStudio. But R is not up to date...<br>
+Here you can find more information on how to connect using <a href="http://timmyreilly.azurewebsites.net/generating-an-ssh-key-and-using-in-on-azure/">SSH key pair</a> <br>
+There might also be issues with the .ssh folder rights, <a href="https://unix.stackexchange.com/questions/36540/why-am-i-still-getting-a-password-prompt-with-ssh-with-public-key-authentication">here is a fix</a> <br>
+
 
 # data size
 Here is the number of XML files in each dataset on 27-02-2017 <br>

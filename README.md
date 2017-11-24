@@ -56,6 +56,8 @@ More specifically :
 <li> sudo chmod go-w ~
 </ul>
 <li> log in using the private key, not the .pub !!!
+<li> error when trying to open connection between VM & data.gouv "Problem with SSL CA cert (path ? access rights ?)". It's difficult to find similar error amongst R users community because it is specific to the fact we use a VM. <a href="https://serverfault.com/questions/722796/install-ssl-certificate-on-azure-cloud-service-vm"> here </a> are some useful info. We need to install an SSL cert on the VM with <a href="https://www.digicert.com/ssl-certificate-installation-apache.htm"> Apache SSL </a> and <a href="https://www.digicert.com/csr-creation-apache.htm"> openSSL </a> then <a href="https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-reserved-public-ip">reserve the IP</a>
+<li>
 </ul>
 
 

@@ -348,6 +348,39 @@ If the case refers to a person (personne physique) rather than a company or anot
 </ul>
 </ul>
 
+## odd_ratio
+Based on these keywords we defined, we now want to know what sequences of words (ngrams) are more likely to be used when the keyword is present in the document.<br>
+We use the concept of odd_ratio to find these influent sequences.
+In the following table we show :
+<ul>
+<li> column : the sequence of keywords
+<li> odd_ratio : the ratio of presence in docs <b>with keyword</b> <i>vs</i> docs <b>without keyword</b>.
+</ul>
+Using the keyword "CORPOREL"
+<ul>
+<li>                          column odd_ratio volume
+<li>           madame_sauvage_madame  4.391304    124
+<li>       redactrice_madame_sauvage  4.571429    117
+<li>                courante_pendant  4.576923    145
+<li>                           ç_ipp  4.578947    106
+<li>            vie_courante_pendant  4.916667    142
+<li>                      suit_frais  5.000000    138
+<li>           recours_tiers_payeurs  5.093023    262
+<li>              jour_consolidation  5.600000    132
+<li>                tenu_age_victime  6.103448    206
+<li>                     pendant_itt  6.562500    121
+<li>                  victime_a_date  7.200000    123
+<li>            soumis_recours_tiers  8.000000    108
+<li>                   age_victime_a  8.428571    132
+<li>             suit_frais_medicaux 11.000000    108
+<li>                endurees_attendu 11.111111    109
+<li>         fonctionnel_sequellaire 12.384615    174
+<li>    souffrances_endurees_attendu 13.857143    104
+<li> deficit_fonctionnel_sequellaire 14.272727    168
+<li>     prejudice_titre_souffrances 19.500000    123
+<li>          evaluation_liquidation 35.666667    110
+</ul>
+
 ## features extraction
 The XML schema offers easy extraction of many features. Unfortunately in many cases the data is not filled correctly and almost everything ends up in the content/body of the document.
 <ul>
@@ -438,6 +471,7 @@ and laws
 <li>           loi du 10 janvier 1978 :   78
 <li>          loi du 31 decembre 1989 :   65
 </ul>
+
 ## court of origin
 results of court_volume_analysis.R
 <ul>

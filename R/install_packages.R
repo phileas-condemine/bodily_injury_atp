@@ -1,7 +1,7 @@
 packages_list=c("knitr","codetools","devtools","data.table",
 "tm","SnowballC","xml2","rvest","tidyverse","stringr",
 "magrittr","hexView","httr","jsonlite","pbapply","wordcloud",
-"text2vec","xgboost","LDAvis","topicmodels")
+"text2vec","xgboost","gbm","LDAvis","topicmodels","text2vec")
 
 
 for (pkg in packages_list){

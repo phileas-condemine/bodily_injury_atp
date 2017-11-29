@@ -385,7 +385,141 @@ The XML schema offers easy extraction of many features. Unfortunately in many ca
 [9] "sommaire 38% missing"      "sct 38% missing"           "citation_jp 92% missing"   "liens 70% missing"        
 [13] "origine 0% missing"        "juridiction 0% missing"    "form_dec_att 100% missing" "date_dec 0% missing"      
 [17] "date_dec_att 100% missing" "nature 0% missing"         "solution 80% missing"      "titre 100% missing"       
-[21] "formation 0% missing"      "doc_name 6% missing" 
+[21] "formation 0% missing"      "doc_name 6% missing"
+</ul>
+</ul>
+
+## articles mentioned
+results of `find articles mentionned.R`
+In CAPP<br>
+specific articles
+<ul>
+<li>    article 700 : 11044
+<li>    article 450 : 10412
+<li>    article 945 :  6441
+<li>   articles 786 :  4878
+<li>    article 786 :  4671
+<li>    article 785 :  4371
+<li>    article 452 :  1130
+<li>    article 451 :   965
+<li>    article 905 :   531
+<li>   articles 945 :   487
+<li>   articles 785 :   359
+<li>    article 779 :   339
+<li> articles l 552 :   312
+<li>   articles 149 :   298
+<li>    article 191 :   266
+<li>  article l 122 :   261
+<li>    article 485 :   216
+<li>    article 455 :   213
+<li>   articles 513 :   178
+<li>    article 475 :   174
+</ul>
+and laws
+<ul>
+<li>           loi du 25 janvier 1985 :  670
+<li>            loi du 9 juillet 1991 :  570
+<li>           loi du 10 juillet 1965 :  548
+<li>           loi du 10 juillet 1991 :  540
+<li>            loi du 6 juillet 1989 :  480
+<li>            loi du 5 juillet 1985 :  392
+<li>          loi du 31 decembre 1971 :  322
+<li>          loi du 21 decembre 2006 :  214
+<li>           loi du 29 juillet 1881 :  203
+<li>           loi du 26 juillet 2005 :  161
+<li>            loi du 2 janvier 1970 :  139
+<li>          loi du 31 decembre 1975 :  115
+<li>               loi du 26 mai 2004 :  112
+<li>               loi du 4 mars 2002 :  107
+<li>              loi du 17 juin 2008 :  103
+<li>           loi du 24 juillet 1966 :  103
+<li>  loi aubry ii du 19 janvier 2000 :   85
+<li>           loi du 19 janvier 2000 :   79
+<li>           loi du 10 janvier 1978 :   78
+<li>          loi du 31 decembre 1989 :   65
+</ul>
+## court of origin
+results of court_volume_analysis.R
+<ul>
+<li> CAPP
+<ul>
+<li>          Cour d'appel de Paris 7271
+<li>     Cour d'appel de Versailles 5455
+<li>           Cour d'appel de Lyon 5310
+<li>          Cour d'appel d'Angers 3793
+<li>        Cour d'appel de Limoges 3729
+<li>         Cour d'appel de Rennes 3417
+<li>         Cour d'appel de Bastia 3386
+<li>          Cour d'appel de Douai 3053
+<li> Cour d'appel d'Aix-en-Provence 2222
+<li>    Cour d'appel de Montpellier 2221
+</ul>
+<li> CASS => what is the CAPP of origin ?
+<ul>
+<li>                                    inconnu 46707
+<li>       Tribunal de grande instance de Paris   542
+<li>            Conseil de prud'hommes de Paris   428
+<li>   Tribunal de grande instance de Marseille   245
+<li> Tribunal de grande instance de Montpellier   230
+<li>    Tribunal de grande instance de Toulouse   226
+<li>             Conseil de prud'hommes de Lyon   224
+<li>        Tribunal de grande instance de Lyon   216
+<li>      Tribunal de grande instance de Grasse   194
+<li>               Tribunal de commerce de Lyon   187
+</ul>
+<li> INCA => what is the CAPP of origin ?
+<ul>
+<li>          Cour d'appel de Paris 14319
+<li> Cour d'appel d'Aix-en-Provence  8596
+<li>     Cour d'appel de Versailles  5315
+<li>          Cour d'appel de Douai  3364
+<li>           Cour d'appel de Lyon  3183
+<li>         Cour d'appel de Rennes  2852
+<li>    Cour d'appel de Montpellier  2798
+<li>       Cour d'appel de Bordeaux  2621
+<li>          Cour d'appel de Nîmes  2163
+<li>       Cour d'appel de Toulouse  2039
+</ul>
+<li> JADE
+<ul>
+<li>                           Conseil d'Etat 113089
+<li>                           Conseil d'État  45147
+<li>  Cour administrative d'appel de Bordeaux  26167
+<li>     Cour administrative d'appel de Paris  24726
+<li> Cour Administrative d'Appel de Marseille  24329
+<li>    Cour Administrative d'Appel de Nantes  15456
+<li>    Cour administrative d'appel de Nantes  14952
+<li>      COUR ADMINISTRATIVE D'APPEL DE LYON  14502
+<li>     Cour administrative d'appel de Nancy  14316
+<li>     Cour administrative d'appel de Douai  14155
+</ul>
+</ul>
+
+## year of trial
+results of time_series_analysis.R
+<ul>
+<li> CAPP
+<ul>
+<li> 2011 2012 2013 2014 2015 2016 2017
+<li> 6251 4518 3611 3887 3667 3052 1163
+</ul>
+
+<li> CASS
+<ul>
+<li> 2011 2012 2013 2014 2015 2016 2017
+<li> 1529 1622 1504 1500 2049 3397 2520
+</ul>
+
+<li> INCA
+<ul>
+<li> 2011 2012 2013 2014 2015 2016 2017
+<li> 9662 9776 9142 9181 8486 8816 7565
+</ul>
+
+<li> JADE
+<ul>
+<li> 2011  2012  2013  2014  2015  2016  2017
+<li> 20079 19529 18761 18547 20843 20899 48275
 </ul>
 </ul>
 

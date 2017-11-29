@@ -1,8 +1,8 @@
 load("Documents/bodily_injury_atp/temp_data/extracted_features.RData")
 library(ggmap)
 
-courts<-c()
 courts=levels(factor(CAPP_features$juridiction))
+courts1=courts
 courts=c(courts,levels(factor(CAPP_features$form_dec_att)))
 courts=c(courts,levels(factor(INCA_features$form_dec_att)))
 courts=c(courts,levels(factor(JADE_features$juridiction)))
@@ -10,22 +10,24 @@ source("Documents/bodily_injury_atp/R/clean_doc.R")
 courts<-clean_doc(courts)
 courts <- gsub("[0-9]{4} [0-9]{2} [0-9]{2}","",courts)
 courts<-clean_doc(courts)
+court_origin=data.frame(origin=courts1,transform=courts)
 courts=unique(courts)
 head(sample(courts),100)
 
-
-grep(pattern="\\(",x=courts)
+# grep(pattern="\\(",x=courts)
 rgxpr<-regexpr(pattern="([a-z]|( ))*\\(",text=courts)
-
 courts_without_chamber=apply(data.frame(text=courts,index=rgxpr,length=attr(rgxpr,"match.length"))[rgxpr>0,],1,function(x)substr(x[1],as.numeric(x[2]),as.numeric(x[2])+as.numeric(x[3])-2))
-courts_without_chamber<-clean_doc(courts_without_chamber)
+courts_without_chamber1=courts_without_chamber
+courts_without_chamber=clean_doc(courts_without_chamber)
+courts_without_chamber_origin=data.frame(origin=courts_without_chamber1,transform=courts_without_chamber)
 courts_without_chamber=unique(courts_without_chamber)
 head(sample(courts_without_chamber),100)
 
 
 
-geocoded_courts<-geocode(courts_without_chamber,output=c("latlon"))
-save(list="geocoded_courts",file="Documents/bodily_injury_atp/temp_data/geocoded_courts.RData")
+# geocoded_courts<-geocode(courts_without_chamber,output=c("latlon"))
+# save(list="geocoded_courts",file="Documents/bodily_injury_atp/temp_data/geocoded_courts.RData")
+load("Documents/bodily_injury_atp/temp_data/geocoded_courts.RData")
 map<-get_map(location=na.omit(geocoded_courts)[1,],zoom=6)
 ggmap(map)+geom_point(data=na.omit(geocoded_courts),aes(x=lon,y=lat))
 
@@ -48,8 +50,10 @@ fix_misgeocoded<-paste0(fix_misgeocoded,", France")
 head(sample(fix_misgeocoded),20)
 
 
-geocoded_courts_batch2<-geocode(fix_misgeocoded,output=c("latlon"))
-mis_geocoded_again<-fix_misgeocoded[is.na(geocoded_courts_batch2$lon)]
+# geocoded_courts_batch2<-geocode(fix_misgeocoded,output=c("latlon"))
+# mis_geocoded_again<-fix_misgeocoded[is.na(geocoded_courts_batch2$lon)]
+# Still 208 not geocoded
+
 
 ############ alternative, use adresse.data.gouv.fr/csv
 
@@ -100,5 +104,12 @@ head(geocoded_fixed)
 
 sum(is.na(geocoded_fixed$latitude.x))
 
-leaflet()%>%addTiles()%>%addMarkers(lng=geocoded$longitude,lat=geocoded$latitude,clusterOptions = markerClusterOptions())
+geocoded_fixed$x=gsub(", France","",geocoded_fixed$x)
+geocoded_fixed_temp=merge(geocoded_fixed,courts_without_chamber_origin,by.x="x",by.y="transform")
+geocoded_fixed_temp=merge(geocoded_fixed_temp,court_origin,by.x="origin",by.y="transform")
+
+leaflet()%>%addTiles()%>%addMarkers(lng=geocoded_fixed$longitude,
+                                    lat=geocoded_fixed$latitude,
+                                    popup=geocoded_fixed$volume,
+                                    clusterOptions = markerClusterOptions())
 

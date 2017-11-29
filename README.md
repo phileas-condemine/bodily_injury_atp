@@ -529,6 +529,22 @@ results of court_volume_analysis.R
 </ul>
 </ul>
 
+## geocoding the court to map the documents
+I made 4 attempts to geocode the courts :
+<ol>
+<li> Prepare the court names for geocoding. There are ~200,000 different court names when mixing CAPP, CASS, INCA, JADE. To reduce the amount I did some data prep :
+<ul>
+<li> remove dates mentionned in the juridiction or form_dec_att field
+<li> remove the name of the chamber, usually inside a pair of parenthesis ()
+<li> apply the usual punctuation removal, lowercase, stripwhitespaces, remove accents
+</ul>
+this yields 1301 unique courts to geocode.
+<li> Try Google Maps API on these data => 579 (44%) are not geocoded
+<li> Remove standard pattern such as "tribunal de grande instance de", "cour d'appel de" and add ", France" on the string to help Google Maps API find the place. => 208 (35% of the 579) are still not geocoded
+<li> Don't use Google Maps API. Instead use the adresse.data.gouv.fr/csv on the 1301 court names. => 80 (6%) are not geocoded.
+<li> Improve this using the list of cities (communes) geocoded from galichon.com/codesgeo. Be careful, some cities in France have short names, for instance "us", this may match with "touloUSe" or "chambre d accUSation". Therefore, need to match full word/full name of the city. There is a limitation to this method : for instance Saint-Denis exists in France Metropolitaine and in La Reunion. <b>100% are geocoded but some might be wrong.</b>
+</ol>
+
 ## year of trial
 results of time_series_analysis.R
 <ul>

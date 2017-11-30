@@ -1,11 +1,14 @@
 load("Documents/bodily_injury_atp/temp_data/extracted_features.RData")
 library(ggmap)
+library(leaflet)
+library(dplyr)
+library(data.table)
 
 courts=levels(factor(CAPP_features$juridiction))
-courts1=courts
 courts=c(courts,levels(factor(CAPP_features$form_dec_att)))
 courts=c(courts,levels(factor(INCA_features$form_dec_att)))
 courts=c(courts,levels(factor(JADE_features$juridiction)))
+courts1=courts
 source("Documents/bodily_injury_atp/R/clean_doc.R")
 courts<-clean_doc(courts)
 courts <- gsub("[0-9]{4} [0-9]{2} [0-9]{2}","",courts)
@@ -68,6 +71,11 @@ geocoded$longitude=as.numeric(as.character(geocoded$longitude))
 ############ alternative, use galichon.com/codesgeo
 ville<-readxl::read_xls("Documents/bodily_injury_atp/temp_data/ville.xls")
 ville$MAJ<-tolower(ville$MAJ)
+ville<-ville%>%select(Latitude,Longitude,MAJ)
+ville$Latitude=as.numeric(ville$Latitude)
+ville$Longitude=as.numeric(ville$Longitude)
+ville<-na.omit(ville)
+ville<-data.table(ville)[,list("longitude"=Longitude[1],"latitude"=Latitude[1]),by=MAJ]
 mis_geocoded_datagouv<-geocoded[is.na(geocoded$longitude),]$x
 mis_geocoded_datagouv<-gsub(" , France","",mis_geocoded_datagouv)
 mis_geocoded_datagouv<-stringr::str_replace_all(mis_geocoded_datagouv,to_replace)
@@ -84,19 +92,32 @@ has_matched<-unlist(sapply(ville_patterns,function(x){
 ))
 has_matched<-has_matched[!is.na(has_matched)]
 has_matched<-data.frame(misgeocoded=has_matched,ville_galichon=names(has_matched))
-has_matched$ville_galichon=gsub("\\^"," ",has_matched$ville_galichon)
-has_matched$ville_galichon=gsub("\\$"," ",has_matched$ville_galichon)
-has_matched$ville_galichon=gsub("^ ","",has_matched$ville_galichon)
-has_matched$ville_galichon=gsub(" $","",has_matched$ville_galichon)
-has_matched$ville_galichon=gsub("[0-9]","",has_matched$ville_galichon)
+# has_matched$ville_galichon=gsub("\\^"," ",has_matched$ville_galichon)
+# has_matched$ville_galichon=gsub("\\$"," ",has_matched$ville_galichon)
+# has_matched$ville_galichon=gsub("^ ","",has_matched$ville_galichon)
+# has_matched$ville_galichon=gsub(" $","",has_matched$ville_galichon)
+# has_matched$ville_galichon=gsub("[0-9]","",has_matched$ville_galichon)
+to_replace=c(" "," ", "","","")
+names(to_replace)<-c("\\^","\\$","^ "," $","[0-9]")
+has_matched$ville_galichon=stringr::str_replace_all(has_matched$ville_galichon,to_replace)
+has_matched<-data.table(has_matched)
+has_matched[,len:=stringr::str_length(ville_galichon)]
+has_matched<-has_matched[order(has_matched$len,decreasing=T)]
+has_matched<-has_matched[,.SD[1],by=misgeocoded]
+# I don't really know why but this doesn't always work the first time so let's re-run the string normalization
+has_matched$ville_galichon=stringr::str_replace_all(has_matched$ville_galichon,to_replace)
+has_matched$ville_galichon=stringr::str_replace_all(has_matched$ville_galichon,to_replace)
+
+head(has_matched$ville_galichon)
+head(ville$MAJ)
 has_matched_enriched=merge(has_matched,ville,by.x="ville_galichon",by.y="MAJ",all.x=F,all.y=F)
 original_name=data.frame(origin=geocoded[is.na(geocoded$longitude),]$x,transform=mis_geocoded_datagouv)
 has_matched_enriched=merge(has_matched_enriched,original_name,by.x="misgeocoded",by.y="transform")
-setnames(has_matched_enriched,c("Longitude","Latitude","origin"),c("longitude","latitude","x"))
+setnames(has_matched_enriched,c("origin"),c("x"))
 has_matched_enriched=has_matched_enriched%>%select(longitude,latitude,x)
-geocoded_fixed=merge(geocoded,has_matched_enriched,by="x")
-geocoded_fixed[is.na(geocoded_fixed$longitude.x),]$longitude.x=geocoded_fixed$longitude.y
-geocoded_fixed[is.na(geocoded_fixed$latitude.x),]$latitude.x=geocoded_fixed$latitude.y
+geocoded_fixed=merge(geocoded,has_matched_enriched,by="x",all.x=T)
+geocoded_fixed[is.na(geocoded_fixed$longitude.x),]$longitude.x=geocoded_fixed[is.na(geocoded_fixed$longitude.x),]$longitude.y
+geocoded_fixed[is.na(geocoded_fixed$latitude.x),]$latitude.x=geocoded_fixed[is.na(geocoded_fixed$latitude.x),]$latitude.y
 
 geocoded_fixed$latitude.y=NULL
 geocoded_fixed$longitude.y=NULL
@@ -104,12 +125,14 @@ head(geocoded_fixed)
 
 sum(is.na(geocoded_fixed$latitude.x))
 
+geocoded_fixed$x=gsub(" , France","",geocoded_fixed$x)
 geocoded_fixed$x=gsub(", France","",geocoded_fixed$x)
+courts_without_chamber_origin$transform=as.character(courts_without_chamber_origin$transform)
 geocoded_fixed_temp=merge(geocoded_fixed,courts_without_chamber_origin,by.x="x",by.y="transform")
+head(geocoded_fixed_temp)
 geocoded_fixed_temp=merge(geocoded_fixed_temp,court_origin,by.x="origin",by.y="transform")
 
-leaflet()%>%addTiles()%>%addMarkers(lng=geocoded_fixed$longitude,
-                                    lat=geocoded_fixed$latitude,
+leaflet()%>%addTiles()%>%addMarkers(lng=as.numeric(geocoded_fixed$longitude),
+                                    lat=as.numeric(geocoded_fixed$latitude),
                                     popup=geocoded_fixed$volume,
                                     clusterOptions = markerClusterOptions())
-

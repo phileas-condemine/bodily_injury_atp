@@ -125,14 +125,20 @@ head(geocoded_fixed)
 
 sum(is.na(geocoded_fixed$latitude.x))
 
-geocoded_fixed$x=gsub(" , France","",geocoded_fixed$x)
+geocoded_fixed$x=gsub(" , France"," ",geocoded_fixed$x)
 geocoded_fixed$x=gsub(", France","",geocoded_fixed$x)
 courts_without_chamber_origin$transform=as.character(courts_without_chamber_origin$transform)
+# head(courts_without_chamber_origin$transform)
+# head(geocoded_fixed$x)
+# err<-geocoded_fixed$x[!geocoded_fixed$x%in%courts_without_chamber_origin$transform]
+# err
 geocoded_fixed_temp=merge(geocoded_fixed,courts_without_chamber_origin,by.x="x",by.y="transform")
+geocoded_fixed_temp=merge(court_origin,geocoded_fixed_temp,by.y="origin",by.x="transform",all.y=F,all.x=F)
 head(geocoded_fixed_temp)
-geocoded_fixed_temp=merge(geocoded_fixed_temp,court_origin,by.x="origin",by.y="transform")
 
-leaflet()%>%addTiles()%>%addMarkers(lng=as.numeric(geocoded_fixed$longitude),
-                                    lat=as.numeric(geocoded_fixed$latitude),
-                                    popup=geocoded_fixed$volume,
+geocoded_and_stats<-data.table(geocoded_fixed_temp)[,list(volume=.N,nb_instances=length(unique(origin)),longitude=longitude.x[1],latitude=latitude.x[1]),by=transform]
+
+leaflet()%>%addTiles()%>%addMarkers(lng=as.numeric(geocoded_and_stats$longitude),
+                                    lat=as.numeric(geocoded_and_stats$latitude),
+                                    popup=paste(geocoded_and_stats$transform,"\n number of cases",geocoded_fixed$volume,"\n number of different names",geocoded_and_stats),
                                     clusterOptions = markerClusterOptions())

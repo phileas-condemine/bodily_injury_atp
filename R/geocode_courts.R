@@ -140,5 +140,5 @@ geocoded_and_stats<-data.table(geocoded_fixed_temp)[,list(volume=.N,nb_instances
 
 leaflet()%>%addTiles()%>%addMarkers(lng=as.numeric(geocoded_and_stats$longitude),
                                     lat=as.numeric(geocoded_and_stats$latitude),
-                                    popup=paste(geocoded_and_stats$transform,"\n number of cases",geocoded_fixed$volume,"\n number of different names",geocoded_and_stats),
+                                    popup=paste(geocoded_and_stats$transform,"\n number of cases",geocoded_and_stats$volume,"\n number of different names",geocoded_and_stats$nb_instances),
                                     clusterOptions = markerClusterOptions())

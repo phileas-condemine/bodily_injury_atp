@@ -1,4 +1,4 @@
-load("Documents/bodily_injury_atp/temp_data/extracted_features.RData")
+load("temp_data/extracted_features.RData")
 library(ggmap)
 library(leaflet)
 library(dplyr)
@@ -9,7 +9,7 @@ courts=c(courts,levels(factor(CAPP_features$form_dec_att)))
 courts=c(courts,levels(factor(INCA_features$form_dec_att)))
 courts=c(courts,levels(factor(JADE_features$juridiction)))
 courts1=courts
-source("Documents/bodily_injury_atp/R/clean_doc.R")
+source("R/clean_doc.R")
 courts<-clean_doc(courts)
 courts <- gsub("[0-9]{4} [0-9]{2} [0-9]{2}","",courts)
 courts<-clean_doc(courts)
@@ -138,7 +138,11 @@ head(geocoded_fixed_temp)
 
 geocoded_and_stats<-data.table(geocoded_fixed_temp)[,list(volume=.N,nb_instances=length(unique(origin)),longitude=longitude.x[1],latitude=latitude.x[1]),by=transform]
 
+save(list="geocoded_and_stats",file="temp_data/geocoded_and_stats.RData")
 leaflet()%>%addTiles()%>%addMarkers(lng=as.numeric(geocoded_and_stats$longitude),
                                     lat=as.numeric(geocoded_and_stats$latitude),
                                     popup=paste(geocoded_and_stats$transform,"\n number of cases",geocoded_and_stats$volume,"\n number of different names",geocoded_and_stats$nb_instances),
                                     clusterOptions = markerClusterOptions())
+
+
+

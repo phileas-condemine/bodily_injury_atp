@@ -6,15 +6,7 @@ prepare_doc <- function(doc_name){
   one_doc <- xml2::read_xml(doc_name)
   one_doc <- xml2::xml_text(one_doc)
   return(one_doc)}
-clean_doc <- function(docs){
-  docs <- tolower(docs)
-  names_patterns <- c("x\\.\\.\\.","y\\.\\.\\.","z\\.\\.\\.","é","è","ê","ë","à","â","ä","î","ï","ù","û","ü","\n","\t",",","'",":",";","-","\\.","/")
-  patterns <- c("anonymat","anonymat","anonymat","e","e","e","e","a","a","a","i","i","u","u","u"," "," ",""," ","",""," ","","")
-  names(patterns) <- names_patterns
-  docs <- stringr::str_replace_all(docs,patterns)
-  docs <- tm::stripWhitespace(docs)
-  return(docs)
-}
+source("R/clean_doc.R")
 # one_doc <- prepare_doc(doc_name1)
 
 # careful with the path, need to check if the root bodily-injury-ATP or smthg else

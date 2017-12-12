@@ -60,9 +60,39 @@ More specifically :
 Here is the offered solution with DigiCert ($$$) <a href="https://www.digicert.com/ssl-certificate-installation-apache.htm"> Apache SSL </a> and <a href="https://www.digicert.com/csr-creation-apache.htm"> openSSL </a> also we may need to <a href="https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-reserved-public-ip">reserve the IP</a> <br>
 An alternative is to use <a href="https://letsencrypt.org/getting-started/">let's encrypt</a>.<br>
 <b>Finally I found an alternative to these painful steps, use wget instead of curl !</b>
-<li>
+<li> Sharing folder with the VM using X2GoClient did not work and I couldn't figure out why.<br>
+After lauching many sessions, I got this message  : <img src="./SSH_server_shared_folders.png"/>
+
+<li> more recently, starting 8th of December, I managed to use RStudio Server and Shiny Server on the Azure VM.
+<li> <a href="https://www.r-bloggers.com/hosting-rstudio-server-on-azure/">here</a> is a recent and good tutorial to use rstudio server on azure.
+<li> <a href="http://docs.rstudio.com/shiny-server/#quick-start"> here </a> some information on installing Shiny Server.<br>
+Also one needs to create a virtual link between the repo and the shiny-server folder where apps should be located.<br>
+sudo ln -s /data/home/phileascondemine/Documents/bodily_injury_atp/shiny_graph_network/ /srv/shiny-server/graph_network_keywords<br>
+Also install needed packages <br>
+sudo su - -c "R -e \"sapply(c('data.table','dplyr','DT',  'googleVis','Hmisc', 'jsonlite', 'knitr', 'leaflet','lubridate','magrittr', 'rlist','shiny', 'shinyBS','shinydashboard','stringr','tidyr', 'networkD3','parallel','text2vec'), function(x)if(!require(x,character.only = T)){install.packages(x,repos = 'http://cran.rstudio.com/')})\"" <br>
+also re-install libpng16-dev to replace libpng12-dev.
+install packages : codetools, xtable,digest,bittops,caTools,RJSONIO<a href="https://stackoverflow.com/questions/23047700/trouble-installing-shiny-dependencies-on-ubtuntu-12-04-to-host-apps-on-shiny-ser"> here </a> is a similar issue.<br>
+Then I also created a shiny app for leaflet rendering <br>
+sudo ln -s /data/home/phileascondemine/Documents/bodily_injury_atp/shiny_leaflet_courts/ /srv/shiny-server/shiny_leaflet_courts<br>
+
+Met some difficulty with tm package because we need r-cran-slam library (apt-get install) with requires a more recent R version.
+Azure blocks R version to 3.2, we need 3.4. So we need to change the source/mirrors of apt-get "vim /etc/apt/sources.list".
+<a href="https://stackoverflow.com/questions/44604757/why-does-apt-get-install-r-base-install-3-2-3-instead-of-3-4-0-in-r">It is not enough</a>
+<ul>
+<li>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+<li>sudo add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
+<li>sudo apt-get update
+<li>sudo apt-get install r-base
+<li>sudo apt-get install libblas-dev liblapack-dev
 </ul>
 
+
+</ul>
+
+
+INCREASE FONT SIZE NETWORKD3 AND display all names nearest neighbors
+DISPLAY TABLEAU DES MOTS <-> RELATIONS
+COMPUTE DISTANCE 200k Ngrams <-> 200k Ngrams with degree of neighborhood and odd-ratio link strength if direct neighbor. => access with API so there is no live computation.
 
 # data size
 Here is the number of XML files in each dataset on 27-02-2017 <br>
@@ -349,12 +379,17 @@ If the case refers to a person (personne physique) rather than a company or anot
 </ul>
 
 ## odd_ratio
+
+### Method for 1 keyword
+
 Based on these keywords we defined, we now want to know what sequences of words (ngrams) are more likely to be used when the keyword is present in the document.<br>
 We use the concept of odd_ratio to find these influent sequences.
 In the following table we show :
 <ul>
 <li> column : the sequence of keywords
 <li> odd_ratio : the ratio of presence in docs <b>with keyword</b> <i>vs</i> docs <b>without keyword</b>.
+<li> note that this odd_ratio is not weighted by the ratio of docs with keyword vs docs without keyword.
+<li> for instance, in the case of "tierce personne" the ratio of docs w/ vs wo is 1% therefore the weighted odd_ratio is multiplied by 100 !
 </ul>
 Using the keyword "CORPOREL"
 <ul>
@@ -380,6 +415,45 @@ Using the keyword "CORPOREL"
 <li>     prejudice_titre_souffrances 19.500000    123
 <li>          evaluation_liquidation 35.666667    110
 </ul>
+
+
+Using the keywords "TIERCE PERSONNE"
+<ul>
+<li>                              column odd_ratio volume
+<li> prejudices_patrimoniaux_permanents 0.6103896    124
+<li>                    sante_actuelles 0.6204380    222
+<li>           depenses_sante_actuelles 0.6250000    221
+<li>                apres_consolidation 0.6486486    305
+<li>                       taux_deficit 0.6516854    147
+<li>                         euro_rente 0.6559140    154
+<li>                  retour_a_domicile 0.6857143    118
+<li>                       frais_futurs 0.7000000    238
+<li>        gains_professionnels_futurs 0.7115385    178
+<li>              professionnels_futurs 0.7115385    178
+<li>                       cout_horaire 0.7288136    102
+<li>     prejudice_esthetique_permanent 0.7789474    169
+<li>               esthetique_permanent 0.7789474    169
+<li>                avant_consolidation 0.8828125    241
+<li>    prejudice_esthetique_temporaire 1.0151515    133
+<li>              esthetique_temporaire 1.0151515    133
+<li>                   fauteuil_roulant 1.0967742    130
+<li>                   prejudice_sexuel 1.4017857    269
+<li>             depenses_sante_futures 1.5476190    107
+<li>                      sante_futures 1.5714286    108
+</ul>
+
+Computation takes a few seconds (~5seconds)
+### Complication for n keywords
+To handle hundreds of words, we want to distribute computation on several cores.<br>
+When I tried to run on 30 cores (32 cores VM), I got "cannot allocate vector of size 500MB" from slave number 22... so I have to use less cores ! I use 10.<br>
+When I look for the neighbors of a key_word with a given threshold I get an unexpected trend :
+<ul>
+<li> 1st layer = 17 neighbords
+<li> 2nd layer = 2429 (of which 624 unique words) ie 142 neighbors (35 new and unique words per keyword) per keyword
+<li> 3rd layer = 108452 (of which 7353 unique words) ie 44 neighbors (11 new unique words per keyword) per keyword...
+
+
+
 
 ## features extraction
 The XML schema offers easy extraction of many features. Unfortunately in many cases the data is not filled correctly and almost everything ends up in the content/body of the document.
@@ -542,7 +616,10 @@ this yields 1301 unique courts to geocode.
 <li> Try Google Maps API on these data => 579 (44%) are not geocoded
 <li> Remove standard pattern such as "tribunal de grande instance de", "cour d'appel de" and add ", France" on the string to help Google Maps API find the place. => 208 (35% of the 579) are still not geocoded
 <li> Don't use Google Maps API. Instead use the adresse.data.gouv.fr/csv on the 1301 court names. => 80 (6%) are not geocoded.
-<li> Improve this using the list of cities (communes) geocoded from galichon.com/codesgeo. Be careful, some cities in France have short names, for instance "us", this may match with "touloUSe" or "chambre d accUSation". Therefore, need to match full word/full name of the city. There is a limitation to this method : for instance Saint-Denis exists in France Metropolitaine and in La Reunion. <b>100% are geocoded but some might be wrong.</b>
+<li> Improve this using the list of cities (communes) geocoded from galichon.com/codesgeo. <br>
+Be careful, some cities in France have short names, for instance "us", this may match with "touloUSe" or "chambre d accUSation". Therefore, need to match full word/full name of the city. There is a limitation to this method : for instance Saint-Denis exists in France Metropolitaine and in La Reunion.<br>
+There might also be several matches for the same city name, for instance both "Aix" & "Aix-en-Provence" exist. I keep the match with the longest string. <br>
+=> 62/80 matches.
 </ol>
 
 ## year of trial
